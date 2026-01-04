@@ -41,5 +41,9 @@ public class Ticket {
     this.exitTime = exitTime;
   }
 
-
+  @Override
+  public String toString() {
+    return "Le prix du ticket du véhicule " + vehicle + " est égal à :" + amount + ". Le vehicule est entré à " + enteringTime
+            + " et sorti à " + exitTime + ". Sa catégorie est " + vehicle.getCategory() + ".";
+  }
 }
