@@ -15,6 +15,15 @@ public class ParkingBot {
    */
   public static void main(String[] args) {
     processVehicles();
+
+    /*int a = 10;
+    int b = a;
+    System.out.println("a => " + a);
+    System.out.println("b => " + b);
+    a = 15;
+    System.out.println("a => " + a);
+    System.out.println("b => " + b);*/
+
   }
 
   private static void processVehicles() {
@@ -22,6 +31,11 @@ public class ParkingBot {
     Vehicle vehicle = new Vehicle();
     vehicle.setRegistrationNumber("LS-324-PM");
     Ticket vehicleTicket = parkingService.processIncomingVehicle(vehicle);
+
+    System.out.println(vehicleTicket);
+
+    parkingService.processExitingVehicle(vehicleTicket);
+
     System.out.println(vehicleTicket);
 
 
