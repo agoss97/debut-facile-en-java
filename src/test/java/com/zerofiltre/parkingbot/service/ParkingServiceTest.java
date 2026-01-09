@@ -6,8 +6,9 @@ import com.zerofiltre.parkingbot.model.*;
 
 import java.util.Date;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ParkingServiceTest {
 
   public static final String REGISTRATION_NUMBER = "AZ-458-56";
@@ -15,13 +16,47 @@ public class ParkingServiceTest {
   private static final String BICYCLE_REGISTRATION_NUMBER = "KD-JFI-45";
 
   ParkingService parkingService = new ParkingService();
+  private Vehicle vehicle;
+  private Ticket ticket;
+  private Date enteringTime;
+
+  @BeforeAll
+  void init(){
+    vehicle = new Vehicle();
+    vehicle.setRegistrationNumber(REGISTRATION_NUMBER);
+
+    ticket = new Ticket();
+    ticket.setVehicle(vehicle);
+  }
+
+  @BeforeEach
+  void reInit(){
+    Date now = new Date();
+    long nowMinus1Hour = now.getTime() - 60 * 60 * 1000;
+    enteringTime = new Date(nowMinus1Hour);
+    ticket.setEnteringTime(enteringTime);
+  }
+
+  @AfterEach
+  void afterEach(){
+    System.out.println("Je m'affiche après chaque test");
+  }
+
+  @AfterAll
+  void afterAll(){
+    System.out.println("Je m'affiche après tous les tests");
+  }
+
+
+  @Timeout(2)
+  @Test
+  void failMoreThan2Seconds() throws InterruptedException {
+    Thread.sleep(3 * 1000);
+  }
 
 
   @Test
   void givenAVehicle_processIncomingVehicle_generatesTicketWithRightTime() {
-    //given : Soit un véhicule a l'entrée du parking avec une plaque d'immatriculation X
-    Vehicle vehicle = new Vehicle();
-    vehicle.setRegistrationNumber(REGISTRATION_NUMBER);
     Date now = new Date();
 
     //when : Enregistrer le véhicule
@@ -53,19 +88,6 @@ public class ParkingServiceTest {
 
   @Test
   void givenARegisterdVehicle_processExitingVehicle_generatesTicketWithHourAndPrice(){
-
-    // Soit un véhicule à l'entrée du parking avec une plaque d'immatriculation
-    Vehicle vehicle = new Vehicle();
-    vehicle.setRegistrationNumber(REGISTRATION_NUMBER);
-    Ticket ticket = new Ticket();
-    ticket.setVehicle(vehicle);
-    Date now = new Date();
-    long nowMinus1Hour = now.getTime() - 60 * 60 * 1000;
-    Date enteringTime = new Date(nowMinus1Hour);
-    ticket.setEnteringTime(enteringTime);
-
-
-
     // when
     Ticket exitTicket = parkingService.processExitingVehicle(ticket);
 
@@ -89,11 +111,6 @@ public class ParkingServiceTest {
 
   @Test
   void givenARegisteredVehicle_processExitingVehicle_generatesTheRightPrice(){
-    // Given: Soit un véhicule à l'entrée du parking avec une plaque d'immatriculation
-    Vehicle vehicle = new Vehicle();
-    vehicle.setRegistrationNumber(REGISTRATION_NUMBER);
-    Ticket ticket = new Ticket();
-    ticket.setVehicle(vehicle);
 
     Vehicle car = new Car();
     car.setRegistrationNumber(CAR_REGISTRATION_NUMBER);
@@ -107,12 +124,6 @@ public class ParkingServiceTest {
     Ticket bicycleTicket = new Ticket();
     bicycleTicket.setVehicle(bicycle);
 
-
-    Date now = new Date();
-    long nowMinus1Hour = now.getTime() - 60 * 60 * 1000;
-    Date enteringTime = new Date(nowMinus1Hour);
-
-    ticket.setEnteringTime(enteringTime);
     carTicket.setEnteringTime(enteringTime);
     bicycleTicket.setEnteringTime(enteringTime);
 
@@ -126,13 +137,10 @@ public class ParkingServiceTest {
     assertThat(exitCarTicket).isNotNull();
     assertThat(exitBicycleTicket).isNotNull();
 
-
     assertThat(exitVehicleTicket.getAmount()).isEqualTo(3);
     assertThat(exitCarTicket.getAmount()).isEqualTo(4.8);
     assertThat(exitBicycleTicket.getAmount()).isEqualTo(1.2);
 
   }
-
-
 
 }
