@@ -12,4 +12,12 @@ public class ParkingService {
     ticket.setEnteringTime(new Date());
     return ticket;
   }
+
+    public Ticket processExitingVehicle(Ticket ticket) {
+        ticket.setExitTime(new Date());
+
+        
+
+        return ticket;
+    }
 }
