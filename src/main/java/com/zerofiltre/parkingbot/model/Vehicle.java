@@ -6,9 +6,7 @@ public class Vehicle {
 
   private String parkingSpotNumber;
 
-  private VehiculeCategoryEnum category;
-
-  public String getRegistrationNumber() {
+    public String getRegistrationNumber() {
     return registrationNumber;
   }
 
